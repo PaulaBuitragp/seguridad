@@ -1,4 +1,4 @@
-const mod = 28;
+const mod = 27;
 
 function encryptMessage(message, a, b) {
   let encrypted = "";
