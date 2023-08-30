@@ -100,26 +100,26 @@ function cleanText(text) {
       const data = Object.values(frequencyMap);
   
       // Display histogram chart
-      const ctx = document.querySelector("#histogramChart").getContext("2d");
-      const histogramChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: labels,
-          datasets: [{
-            label: "Frequency",
-            data: data,
-            backgroundColor: "rgba(75, 192, 192, 0.2)",
-            borderColor: "rgba(75, 192, 192, 1)",
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            }
+      const encryptedCtx = document.querySelector("#cifradoHistogramChart").getContext("2d");
+      const encryptedHistogramChart = new Chart(encryptedCtx, {
+          type: "bar",
+          data: {
+              labels: labels,
+              datasets: [{
+                  label: "Frequency",
+                  data: data,
+                  backgroundColor: "rgba(75, 192, 192, 0.2)",
+                  borderColor: "rgba(75, 192, 192, 1)",
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
           }
-        }
       });
     }
   }
@@ -166,26 +166,30 @@ function descifrarTexto() {
         const decryptedData = Object.values(decryptedFrequencyMap);
 
         // Display decrypted histogram chart
-        const decryptedCtx = document.querySelector("#decryptedHistogramChart").getContext("2d");
+        const decryptedCtx = document.querySelector("#descifradoHistogramChart").getContext("2d");
         const decryptedHistogramChart = new Chart(decryptedCtx, {
-          type: "bar",
-          data: {
+        type: "bar",
+        data: {
             labels: decryptedLabels,
             datasets: [{
-              label: "Frequency",
-              data: decryptedData,
-              backgroundColor: "rgba(75, 192, 192, 0.2)",
-              borderColor: "rgba(75, 192, 192, 1)",
-              borderWidth: 1
+                label: "Frequency",
+                data: decryptedData,
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                borderColor: "rgba(75, 192, 192, 1)",
+                borderWidth: 1
             }]
-          },
-          options: {
+        },
+        options: {
             scales: {
-              y: {
-                beginAtZero: true
-              }
+                y: {
+                    beginAtZero: true
+                }
             }
-          }
-        });
+        }
+    });
     }
 }
+
+// Attach event listeners to buttons
+document.querySelector("#encryptButton").addEventListener("click", getTextAndEncrypt);
+document.querySelector("#decryptButton").addEventListener("click", descifrarTexto);
