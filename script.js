@@ -1,185 +1,191 @@
-const mod = 27;
-
-function encryptMessage(message, a, b) {
-  let encrypted = "";
-  for (let i = 0; i < message.length; i++) {
-    const char = message[i];
-    if (char === " ") {
-      encrypted += " ";
-    } else {
-      const charCode = char.charCodeAt(0) - 97;
-      const encryptedCharCode = (a * charCode + b) % mod + 97;
-      encrypted += String.fromCharCode(encryptedCharCode);
-    }
-  }
-  return encrypted;
-}
-
-function modInverse(a, m) {
-  for (let i = 1; i < m; i++) {
-    if ((a * i) % m === 1) {
-      return i;
-    }
-  }
-  return -1;
-}
-
-function calculateFrequencyStats(text) {
-  const frequencies = new Array(26).fill(0);
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i].toLowerCase();
-    if (char >= "a" && char <= "z") {
-      frequencies[char.charCodeAt(0) - 97]++;
-    }
-  }
-  return frequencies;
-}
-
-const colorPalette = [
+// Function to clean and normalize text
+function cleanText(text) {
+    const characterMap = {
+      á: "a",
+      é: "e",
+      í: "i",
+      ó: "o",
+      ú: "u",
+      ü: "u",
+      Á: "A",
+      É: "E",
+      Í: "I",
+      Ó: "O",
+      Ú: "U",
+      Ü: "U",
+    };
   
-  "#FF6384",
-  "#36A2EB",
-  "#FFCE56",
-  "#C9DE55",
-  "#FF9F40",
-  "#FFD700",
-  "#8A2BE2",
-  "#3CB371",
-  "#E9967A",
-  "#7B68EE",
-  "#32CD32",
-  "#FF4500",
-  "#87CEEB",
-  "#FF6347",
-  "#1E90FF",
-  "#DAA520",
-  "#FF69B4",
-  "#00FA9A",
-  "#9400D3",
-  "#008080",
-  "#FF1493",
-  "#00BFFF",
-  "#FFD700",
-  "#9932CC",
-  "#2E8B57",
-  "#FF8C00",
-  "#6A5ACD",
-];
-
-function updateChart(data) {
-  const frequencyChart = document.getElementById("frequencyChart").getContext("2d");
-
-  // Filtrar letras con frecuencia mayor a cero
-  const labels = [];
-  const filteredData = [];
-  for (let i = 0; i < data.length; i++) {
-    if (data[i] > 0) {
-      labels.push(String.fromCharCode(97 + i));
-      filteredData.push(data[i]);
+    const specialCharactersRegex = /[\s.,\/#!$%\^&\*;:{}=\-_`~()\n0-9]/g;
+  
+    function replaceCharacter(character) {
+      return characterMap[character] || character;
+    }
+  
+    return text
+      .replace(specialCharactersRegex, "")
+      .replace(/[áéíóúüÁÉÍÓÚÜ]/g, replaceCharacter)
+      .toUpperCase();
+  }
+  
+  // Function to check if two numbers are coprime
+  function areCoprimes(a, b) {
+    function calculateGCD(x, y) {
+      return y === 0 ? x : calculateGCD(y, x % y);
+    }
+    return calculateGCD(a, b) === 1;
+  }
+  
+  // Function to calculate the modular multiplicative inverse
+  function modularInverse(a, m) {
+    for (let x = 1; x < m; x++) {
+      if ((a * x) % m === 1) {
+        return x;
+      }
+    }
+    return 1;
+  }
+  
+  // Function for encryption
+  function encryption(plaintext, a, b) {
+    if (areCoprimes(a, 27)) {
+      const ALPHABET = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+      const m = ALPHABET.length;
+      let ciphertext = "";
+  
+      for (const char of plaintext) {
+        const index = ALPHABET.indexOf(char);
+        if (index === -1) {
+          ciphertext += char;
+        } else {
+          const encryptedIndex = (a * index + b) % m;
+          const encryptedChar = ALPHABET[encryptedIndex];
+          ciphertext += encryptedChar;
+        }
+      }
+  
+      return ciphertext;
+    } else {
+      alert("A y 27 deben ser coprimos, ingresa otro valor para a");
+      return null;
     }
   }
-
-  new Chart(frequencyChart, {
-    type: "pie",
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          data: filteredData,
-          backgroundColor: colorPalette,
+  
+  // Function to calculate the frequency of characters
+  function calculateCharacterFrequency(text) {
+    const frequencyMap = {};
+    for (const char of text) {
+      if (frequencyMap[char]) {
+        frequencyMap[char]++;
+      } else {
+        frequencyMap[char] = 1;
+      }
+    }
+    return frequencyMap;
+  }
+  function getTextAndEncrypt() {
+    const text = document.querySelector("#textToEncrypt").value;
+    const cleanedText = cleanText(text);
+    const a = parseInt(document.querySelector("#aValue").value, 10);
+    const b = parseInt(document.querySelector("#bValue").value, 10);
+  
+    const encryptedText = encryption(cleanedText, a, b);
+    if (encryptedText !== null) {
+      document.querySelector("#resultToEncrypt").value = encryptedText;
+  
+      // Calculate frequency histogram
+      const frequencyMap = calculateCharacterFrequency(encryptedText);
+  
+      // Prepare data for the histogram chart
+      const labels = Object.keys(frequencyMap);
+      const data = Object.values(frequencyMap);
+  
+      // Display histogram chart
+      const ctx = document.querySelector("#histogramChart").getContext("2d");
+      const histogramChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Frequency",
+            data: data,
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 1
+          }]
         },
-      ],
-    },
-    options: {
-      tooltips: {
-        callbacks: {
-          label: (tooltipItem, data) => {
-            const label = data.labels[tooltipItem.index];
-            const value = data.datasets[0].data[tooltipItem.index];
-            const letterCount = value === 1 ? "1 repetición" : `${value} repeticiones`;
-            return `${label}: ${letterCount}`;
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+  }
+  // Function for decryption
+function decryption(ciphertext, a, b) {
+    if (areCoprimes(a, 27)) {
+        const ALPHABET = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+        const m = ALPHABET.length;
+        const aInverse = modularInverse(a, m);
+        let plaintext = "";
+
+        for (const char of ciphertext) {
+            const index = ALPHABET.indexOf(char);
+            if (index === -1) {
+                plaintext += char;
+            } else {
+                const decryptedIndex = (aInverse * (index - b + m)) % m;
+                const decryptedChar = ALPHABET[decryptedIndex];
+                plaintext += decryptedChar;
+            }
+        }
+
+        return plaintext;
+    } else {
+        alert("A y 27 deben ser coprimos, ingresa otro valor para a");
+        return null;
+    }
+}
+
+function descifrarTexto() {
+    const encryptedText = document.querySelector("#encriptedText").value;
+    const a = parseInt(document.querySelector("#numero-a").value, 10);
+    const b = parseInt(document.querySelector("#numero-b").value, 10);
+
+    const decryptedText = decryption(encryptedText, a, b);
+    if (decryptedText !== null) {
+        document.querySelector("#resultToDecrypt").value = decryptedText;
+
+        // Calculate frequency histogram for decrypted text
+        const decryptedFrequencyMap = calculateCharacterFrequency(decryptedText);
+
+        // Prepare data for the decrypted histogram chart
+        const decryptedLabels = Object.keys(decryptedFrequencyMap);
+        const decryptedData = Object.values(decryptedFrequencyMap);
+
+        // Display decrypted histogram chart
+        const decryptedCtx = document.querySelector("#decryptedHistogramChart").getContext("2d");
+        const decryptedHistogramChart = new Chart(decryptedCtx, {
+          type: "bar",
+          data: {
+            labels: decryptedLabels,
+            datasets: [{
+              label: "Frequency",
+              data: decryptedData,
+              backgroundColor: "rgba(75, 192, 192, 0.2)",
+              borderColor: "rgba(75, 192, 192, 1)",
+              borderWidth: 1
+            }]
           },
-        },
-      },
-    },
-  });
-}
-
-document.getElementById("encryptButton").addEventListener("click", () => {
-  const inputText = document.getElementById("inputText").value;
-  const a = parseInt(document.getElementById("a").value);
-  const b = parseInt(document.getElementById("b").value);
-  const encryptedText = encryptMessage(inputText, a, b);
-  document.getElementById("encryptedText").textContent = encryptedText;
-  updateFrequencyStats(encryptedText);
-});
-
-document.getElementById("decryptButton").addEventListener("click", () => {
-  const encryptedInput = document.getElementById("encryptedInput").value;
-  
-  const frequencies = calculateFrequencyStats(encryptedInput);
-  const maxFrequencyIndex = frequencies.indexOf(Math.max(...frequencies));
-  const eCharCode = maxFrequencyIndex + 97;
-
-  const possibleSolutions = [];
-
-  for (let a = 1; a < mod; a++) {
-    const aInverse = modInverse(a, mod);
-    if (aInverse !== -1) {
-      for (let b = 0; b < mod; b++) {
-        const decryptedText = decryptMessage(encryptedInput, a, b);
-        possibleSolutions.push({ a: a, b: b, decrypted: decryptedText });
-      }
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
     }
-  }
-
-  const decryptedResultsElement = document.getElementById("decryptedResults");
-  decryptedResultsElement.innerHTML = "";
-
-  for (let i = 0; i < Math.min(5, possibleSolutions.length); i++) {
-    const solutionElement = document.createElement("p");
-    const solutionText = `a = ${possibleSolutions[i].a}, b = ${possibleSolutions[i].b}: ${possibleSolutions[i].decrypted}`;
-    solutionElement.textContent = solutionText;
-    decryptedResultsElement.appendChild(solutionElement);
-  }
-
-  if (possibleSolutions.length > 5) {
-    const readMoreButton = document.getElementById("readMoreButton");
-    readMoreButton.style.display = "block";
-    readMoreButton.addEventListener("click", () => {
-      for (let i = 5; i < possibleSolutions.length; i++) {
-        const solutionElement = document.createElement("p");
-        const solutionText = `a = ${possibleSolutions[i].a}, b = ${possibleSolutions[i].b}: ${possibleSolutions[i].decrypted}`;
-        solutionElement.textContent = solutionText;
-        decryptedResultsElement.appendChild(solutionElement);
-      }
-      readMoreButton.style.display = "none";
-    });
-  }
-  // Mostrar el análisis de frecuencia del mensaje cifrado en el gráfico de pastel
-  updateFrequencyStats(encryptedInput);
-});
-
-function decryptMessage(encrypted, a, b) {
-  const aInverse = modInverse(a, mod);
-  let decrypted = "";
-  for (let i = 0; i < encrypted.length; i++) {
-    const char = encrypted[i];
-    if (char === " ") {
-      decrypted += " ";
-    } else {
-      const charCode = char.charCodeAt(0) - 97;
-      const decryptedCharCode = (aInverse * (charCode - b)) % mod;
-      decrypted += String.fromCharCode((decryptedCharCode + mod) % mod + 97);
-    }
-  }
-  return decrypted;
-}
-
-// Rest of the code remains unchanged
-
-
-function updateFrequencyStats(text) {
-  const frequencyStats = calculateFrequencyStats(text);
-  updateChart(frequencyStats);
 }
