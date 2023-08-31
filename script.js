@@ -65,7 +65,7 @@ function cleanText(text) {
   
       return ciphertext;
     } else {
-      alert("A y 27 deben ser coprimos, ingresa otro valor para a");
+      alert("A y B deben ser coprimos");
       return null;
     }
   }
