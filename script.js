@@ -144,7 +144,7 @@ function decryption(ciphertext, a, b) {
 
         return plaintext;
     } else {
-        alert("A y 27 deben ser coprimos, ingresa otro valor para a");
+        alert("A y B deben ser coprimos");
         return null;
     }
 }
