@@ -194,7 +194,6 @@ function descifrarTexto() {
 document.querySelector("#encryptButton").addEventListener("click", getTextAndEncrypt);
 document.querySelector("#decryptButton").addEventListener("click", descifrarTexto);
 
-
 function cerrar() {
   sessionStorage.removeItem('isLoggedIn');
   window.location.replace('index.html');
