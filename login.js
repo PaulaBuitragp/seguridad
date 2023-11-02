@@ -54,14 +54,14 @@ document.getElementById('login-form').addEventListener('submit', (event) => {
     window.location.replace('cifrado.html');
   } else {
     failedAttempts++;
-    showError('Has ingresado mal los datos, revisalos e intenta de nuevo');
+    showError('Datos incorrectos. Intenta de nuevo');
     logFailedAttempt(username); // Registra el intento fallido
     sessionStorage.setItem('isLoggedIn', 'false');
     sessionStorage.setItem('failedAttempts', failedAttempts);
     sessionStorage.setItem('blockTime', blockTime);
   }
-  if (failedAttempts === 3) {
-    showError('Has bloqueado los intentos (3), en 1 minuto podras intentarlo de nuevo');
+  if (failedAttempts == 3) {
+    showError('Datos incorrectos. Intenta de nuevo en 1 minuto');
     blockLogin();
   }
 });
