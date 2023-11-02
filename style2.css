@@ -1,0 +1,74 @@
+:root {
+  --light-color: #f5f5f5; /* Cambia el color claro */
+  --accent-color: #2b7281; /* Cambia el color de acento */
+  --back-color: #f0f0f0; /* Cambia el color de fondo */
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  line-height: 1.6;
+  background-image: url(imagenes/fondo7.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.container {
+  max-width: 900px; /* Aumenta el ancho máximo del contenedor */
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: var(--primary-color); /* Cambia el color de fondo del contenedor */
+  border-radius: 1rem; /* Aumenta la curvatura de los bordes */
+}
+
+h1 {
+  text-align: center;
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: #ffffff; /* Cambia el color del texto a blanco */
+}
+
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Aumenta el espacio entre elementos */
+  background-color: var(--accent-color);
+  padding: 1.5rem; /* Aumenta el espacio interior */
+  border-radius: 1rem;
+}
+
+.form label {
+  font-size: 1.3rem; /* Ajusta el tamaño de la etiqueta */
+}
+
+.form input[type="text"],
+.form input[type="password"] {
+  font-size: 1.3rem;
+  padding: 0.8rem; /* Aumenta el espacio dentro del input */
+  border: 2px solid var(--light-color); /* Añade un borde al input */
+  background-color: var(--light-color);
+  border-radius: 0.5rem;
+}
+
+.form button {
+  font-size: 1.3rem;
+  padding: 0.8rem 1.5rem; /* Aumenta el espacio interior del botón */
+  border: none;
+  background-color: var(--primary-color);
+  color: var(--back-color);
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.form button:hover {
+  background-color: #6197aa;
+}
+
+@media (max-width: 600px) {
+  .form {
+    display: flex;
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Message Encryption</title>
+</head>
+<body>
+    <h1>Cifrado Afín</h1>
+    <div class="container">
+        <h2>Cifrado</h2>
+        <div class="input-section">
+            <label for="textToEncrypt">Ingresar mensaje:</label>
+            <textarea id="textToEncrypt" rows="4" cols="50"></textarea>
+        </div>
+        <div class="input-section">
+            <label for="aValue">Ingrese 'a':</label>
+            <input type="number" id="aValue">
+        </div>
+        <div class="input-section">
+            <label for="bValue">Ingrese 'b':</label>
+            <input type="number" id="bValue">
+        </div>
+        <button onclick="getTextAndEncrypt()">Cifrar</button>
+        <div class="output-section">
+            <label for="resultToEncrypt">Mensaje cifrado:</label>
+            <textarea id="resultToEncrypt" rows="4" cols="50" readonly></textarea>
+        </div>
+    </div>
+    <div class="container">
+        <h2>Descifrado</h2>
+        <div class="input-section">
+            <label for="encriptedText">Ingresar mensaje cifrado:</label>
+            <textarea id="encriptedText" rows="4" cols="50"></textarea>
+        </div>
+        <div class="input-section">
+            <label for="numero-a">Ingrese 'a':</label>
+            <input type="text" id="numero-a">
+        </div>
+        <div class="input-section">
+            <label for="numero-b">Ingrese 'b':</label>
+            <input type="text" id="numero-b">
+            
+        </div>
+        <button onclick="descifrarTexto()">Descifrar</button>
+        <div class="output-section">
+            <label for="resultToDecrypt">Mensaje descifrado:</label>
+            <textarea id="resultToDecrypt" rows="4" cols="50" readonly></textarea>
+        </div>
+        <div class="output-section">
+            <h2>Frecuencia de letras en Cifrado</h2>
+            <div id="encryptedHistogramChart">
+                <canvas id="cifradoHistogramChart" width="400" height="300"></canvas>
+            </div>
+        </div>
+        <div class="output-section">
+            <h2>Frecuencia de letras en Descifrado</h2>
+            <div id="decryptedHistogramChart">
+                <canvas id="descifradoHistogramChart" width="400" height="300"></canvas>
+            </div>
+        </div>
+        <div class="container">
+            <h2>Registros de Intentos Fallidos</h2>
+            <pre id="log-container"></pre>
+          </div>
+        <script src="script.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const logContainer = document.getElementById('log-container');
+                const log = sessionStorage.getItem('log');
+    
+                if (log) {
+                    logContainer.textContent = log;
+                } else {
+                    logContainer.textContent = 'No hay intentos fallidos registrados.';
+                }
+            });
+        </script>
+        <button id="cerrar" onclick="cerrar()">Cerrar Sesión</button>
+    </body>
+    <script>
+        function checkSession() {
+          const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+          if (!isLoggedIn || isLoggedIn !== 'true') {
+            window.location.replace('index.html');
+          }
+        }
+        checkSession();
+    </script>
+    </html>
