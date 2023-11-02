@@ -3,9 +3,9 @@ var blockTime = parseInt(sessionStorage.getItem('blockTime')) || 0;
 
 function checkCredentials(username, password) {
   const users = [
-    { username: 'AdminUEB1234', password: 'UEB2023*Bosque' },
-    { username: 'AdminUEB5678', password: 'Ueb2023*BOSQUE' },
-    { username: 'AdminUEB9012', password: 'UeB2023*BoSqUe' }
+    { username: 'Seguridad01', password: 'SecuR1ty#2023' },
+    { username: 'Seguridad02', password: 'B1gD@t@H4ck3r' },
+    { username: 'Seguridad03', password: 'S3cr3tP@sswrd' }
   ];
   const user = users.find(
     (user) => user.username === username && user.password === password
