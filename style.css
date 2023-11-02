@@ -14,7 +14,7 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 50px auto;
     padding: 20px;
     background-color: white;
@@ -68,3 +68,4 @@ h1 {
   color: #302e2e;
   font-size: 20px;
 }
+
